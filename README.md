@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2択の質問</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    .question {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .btn {
+      padding: 20px 40px;
+      font-size: 20px;
+      cursor: pointer;
+      border: none;
+      color: white;
+      border-radius: 10px;
+    }
+    .btn.yes {
+      background-color: green;
+    }
+    .btn.no {
+      background-color: red;
+    }
+    #message {
+      font-size: 28px;
+      margin-top: 30px;
+      color: darkblue;
+    }
+    #question-image, #second-question-image, #third-question-image, #final-image {
+      width: 300px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="content">
+    <div id="question" class="question">Do you love me?</div>
+    <img id="question-image" src="1.png" alt="Question Image">
+    <div id="options" class="options">
+      <button id="yes" class="btn yes" onclick="handleYes()">Yes</button>
+      <button id="no" class="btn no" onclick="handleNo()">No</button>
+    </div>
+  </div>
+  <div id="message"></div>
+
+  <script>
+    let noCount = 0;
+    const images = ["1.png", "2.png", "3.png", "4.png","5.png"];
+
+    function handleYes() {
+      secondQuestion();
+    }
+
+    function handleNo() {
+      noCount++;
+      const yesButton = document.getElementById("yes");
+      const noButton = document.getElementById("no");
+      const questionImage = document.getElementById("question-image");
+      
+      if (noCount < images.length) {
+        questionImage.src = images[noCount];
+      }
+      
+      if (noCount === 1) {
+        yesButton.style.width = "200px";
+        yesButton.style.height = "80px";
+        noButton.style.width = "100px";
+        noButton.style.height = "40px";
+      } else if (noCount === 2) {
+        yesButton.style.width = "300px";
+        yesButton.style.height = "100px";
+        noButton.style.width = "80px";
+        noButton.style.height = "30px";
+      } else if (noCount === 3) {
+        yesButton.style.width = "400px";
+        yesButton.style.height = "120px";
+        noButton.style.width = "50px";
+        noButton.style.height = "20px";
+      } else if (noCount >= 4) {
+        document.getElementById("options").innerHTML = `
+          <button class="btn yes" onclick="handleYes()">Yes</button>
+          <button class="btn yes" onclick="handleYes()">Yes</button>
+        `;
+      }
+    }
+
+    function secondQuestion() {
+      document.getElementById("question").innerText = "Does Yuna love you?";
+      const questionImage = document.getElementById("question-image");
+      if (questionImage) {
+        questionImage.remove();
+      }
+      document.getElementById("content").insertAdjacentHTML('afterbegin', '<img id="second-question-image" src="6.png" alt="Second Question Image">');
+      document.getElementById("options").innerHTML = `
+        <button class="btn yes" onclick="showLoveMessage('I love you!')">Yes</button>
+        <button class="btn yes" onclick="showLoveMessage('大好きです!いつもありがとう!')">Absolutely</button>
+      `;
+    }
+
+    function showLoveMessage(message) {
+      document.getElementById("message").innerText = message;
+      setTimeout(thirdQuestion, 2000);
+    }
+
+    function thirdQuestion() {
+      document.getElementById("message").innerText = "";
+      document.getElementById("question").innerText = "What's the date today?";
+      const secondQuestionImage = document.getElementById("second-question-image");
+      if (secondQuestionImage) {
+        secondQuestionImage.remove();
+      }
+      document.getElementById("content").insertAdjacentHTML('afterbegin', '<img id="third-question-image" src="7.png" alt="Third Question Image">');
+      document.getElementById("options").innerHTML = `
+        <button class="btn yes" onclick="handleDate('12/28')">12/28</button>
+        <button class="btn yes" onclick="handleDate('12/25')">12/25</button>
+      `;
+    }
+
+    function handleDate(date) {
+      if (date === '12/28') {
+        showFinalMessage("Happy half year!!");
+      } else {
+        showLoveMessage("Merry Christmas!!");
+        setTimeout(thirdQuestion, 2000);
+      }
+    }
+
+    function showFinalMessage(message) {
+      document.getElementById("content").innerHTML = `<div id="message">${message}</div>`;
+      document.getElementById("content").insertAdjacentHTML('afterbegin', '<img id="final-image" src="8.png" alt="Final Message Image">');
+      setTimeout(() => {
+        document.getElementById("message").innerText = "半年間ありがとう!きょーちゃんと一緒に過ごす時間はいつも楽しくて、すごく好きです!!これからもどうぞよろしくね!";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
